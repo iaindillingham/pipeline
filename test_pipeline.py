@@ -18,6 +18,6 @@ def test_extract(monkeypatch):
 
 
 def test_transform():
-    record = {"publish_date": "2025-01-01"}
+    record = {"publish_date": datetime.date(2025, 1, 1)}
     book = pipeline.transform(record)
     assert book == pipeline.Book(datetime.date(2025, 1, 1))

@@ -23,5 +23,4 @@ def extract():
 
 
 def transform(record):
-    publish_date = datetime.date.fromisoformat(record["publish_date"])
-    return Book(publish_date)
+    return Book(record["publish_date"])
