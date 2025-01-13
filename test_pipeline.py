@@ -14,7 +14,7 @@ class RequestsResponse(requests.Response):
 def test_extract(monkeypatch):
     monkeypatch.setattr(requests, "get", lambda *args, **kwargs: RequestsResponse())
     record = next(pipeline.extract())
-    assert record["publish_date"] == "2025-01-01"
+    assert record["publish_date"] == datetime.date(2025, 1, 1)
 
 
 def test_transform():
