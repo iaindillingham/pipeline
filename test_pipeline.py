@@ -1,20 +1,19 @@
 import datetime
-
-import requests
+from unittest import mock
 
 import pipeline
 
 
-class RequestsResponse(requests.Response):
-    def __init__(self):
-        super().__init__()
-        self._content = '{"records": [{"publish_date": "2025-01-01"}]}'.encode("utf-8")
+@mock.patch("requests.get")
+def test_extract(mocked_get):
+    mocked_response = mocked_get.return_value
+    page = {"records": [{"publish_date": datetime.date(2025, 1, 1)}]}
+    mocked_response.json.return_value = page
 
+    next(pipeline.extract())
 
-def test_extract(monkeypatch):
-    monkeypatch.setattr(requests, "get", lambda *args, **kwargs: RequestsResponse())
-    record = next(pipeline.extract())
-    assert record["publish_date"] == datetime.date(2025, 1, 1)
+    mocked_get.assert_called_once_with("https://example.com/")
+    mocked_response.json.assert_called_once_with(object_hook=pipeline.object_hook)
 
 
 def test_transform():
